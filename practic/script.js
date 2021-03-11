@@ -13,7 +13,6 @@ class ApiMock {
     }
 }
 
-
 class GoodsItem {
     constructor(title, price) {
       this.title = title;
@@ -51,8 +50,9 @@ class GoodsList {
     }
     getSum() {
         let res = this.goods.reduce((sum, item) => sum += item.price, 0);
-        alert('полная стоимость товаров в корзине: ' + res);
-    }    
+        console.log('полная стоимость товаров в корзине: ' + res + '$');
+        //alert('полная стоимость товаров в корзине: ' + res + '$');
+    } 
 }
 
 const goodsList = new GoodsList();
