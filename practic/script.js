@@ -1,15 +1,35 @@
-class ApiMock {
+class Api {
     constructor() {
-
+      this.url = 'goods.json';
     }
 
-    fetch() {
-      return [
-          { title: 'Shirt', price: 150 },
-          { title: 'Socks', price: 50 },
-          { title: 'Jacket', price: 350 },
-          { title: 'Shoes', price: 250 },
-        ];
+    fetch(error, success) {
+      let xhr;
+    
+      if (window.XMLHttpRequest) {
+        xhr = new XMLHttpRequest();
+      } else if (window.ActiveXObject) { 
+        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+    
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if(xhr.status === 200) {
+            success(JSON.parse(xhr.responseText));
+          } else if(xhr.status > 400) {
+            error('все пропало');
+          }
+        }
+      }
+    
+      xhr.open('GET', this.url, true);
+      xhr.send();
+    }
+
+    fetchPromise() {
+      return new Promise((resolve, reject) => {
+        this.fetch(reject, resolve)
+      }) 
     }
 }
 
@@ -28,38 +48,92 @@ class GoodsItem {
             <button class="cart-button">Купить</button>
             </div>
             </div>`;
+            //<div><h3>${this.res}</h3></div>
             }
     }
 
+class Header {
+  constructor() {
+    this.$container = document.querySelector('header');
+    this.$button = this.$container.querySelector('.cart-button');
+    this.$search = this.$container.querySelector('#search');
+  }
+
+  setSearchHandler(callback) {
+    this.$search.addEventListener('input', callback);
+  }
+
+  setButtonHandler(callback) {
+    this.$button.addEventListener('click', callback);
+  }
+}
+
 class GoodsList {
     constructor() {
-      this.api = new ApiMock();
+      this.api = new Api();
+      this.header = new Header();
       this.$goodsList = document.querySelector('.goods-list');
       this.goods = [];
+      this.filteredGoods = [];
+      //this.api.fetch(this.onFetchError.bind(this), this.onFetchSuccess.bind(this));
+
+      this.header.setSearchHandler((evt) => {
+        this.search(evt.target.value);
+      })
+
+    //fetchGoods() {
+    //  this.goods = this.api.fetch().map(({title, price}) => new GoodsItem(title, price));
+    //}
+
+    //onFetchError(err) {
+      const fetch = this.api.fetchPromise();
+
+      fetch.then((data) => { this.onFetchSuccess(data) })
+        .catch((err) => { this.onFetchError(err) });
+      console.log(fetch);
+    }
+//
+    search(str) {
+      if(str === '') {
+        this.filteredGoods = this.goods;
+      }
+      const regexp = new RegExp(str, 'gi');
+      this.filteredGoods = this.goods.filter((good) => regexp.test(good.title));
+      this.render();
     }
 
-    fetchGoods() {
-      this.goods = this.api.fetch().map(({title, price}) => new GoodsItem(title, price));
+    onFetchSuccess(data) {
+      this.goods = data.map(({title, price}) => new GoodsItem(title, price));
+      this.filteredGoods = this.goods;
+      this.render();
+    }
+
+    onFetchError(err) {
+      this.$goodsList.insertAdjacentHTML('beforeend', `<h3>${err}</h3>`);
     }
 
     render() {
       this.$goodsList.textContent = '';
-      this.goods.forEach((good) => {
+      this.filteredGoods.forEach((good) => {
           this.$goodsList.insertAdjacentHTML('beforeend', good.getHtml());
       })
     }
+
     getSum() {
-        let res = this.goods.reduce((sum, item) => sum += item.price, 0);
+        let res = this.filteredGoods.reduce((sum, item) => sum += item.price, 0);
         console.log('полная стоимость товаров в корзине: ' + res + '$');
         //alert('полная стоимость товаров в корзине: ' + res + '$');
     } 
 }
 
+function openCart () {
+  console.log('cart');
+}
+
 const goodsList = new GoodsList();
 
-goodsList.fetchGoods();
-goodsList.render();
-goodsList.getSum();
+//goodsList.render();
+//goodsList.getSum();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //пустой класс корзина
