@@ -1,6 +1,8 @@
+const API_URL = "https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses";
+
 class Api {
     constructor() {
-      this.url = 'goods.json';
+      this.url = `${API_URL}/catalogData.json`;
     }
 
     fetch(error, success) {
@@ -15,8 +17,7 @@ class Api {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           if(xhr.status === 200) {
-            success(JSON.parse(xhr//.responseText//
-              ));
+            success(JSON.parse(xhr.responseText));
           } else if(xhr.status > 400) {
             error('все пропало');
           }
@@ -27,6 +28,8 @@ class Api {
       xhr.send();
     }
 
+  
+
     fetchPromise() {
       return new Promise((resolve, reject) => {
         this.fetch(reject, resolve)
@@ -34,27 +37,28 @@ class Api {
     }
 }
 
-class GoodsItem {
-    constructor(title, price) {
-      this.title = title;
-      this.price = price;
-    }
+class GoodsItem { 
+    constructor (product_name, price, id_product) {
+      this.product_name = product_name;
+      this.price = price;        
+      this.id_product = id_product;
+  }
 
-    getHtml() {
+  getHtml () {
       return `<div>
             <div class="goods-item">
             <img src="200x150.jpg" alt="some img">
-            <h3>${this.title}</h3>
+            <h3>${this.product_name}</h3>
             <p>${this.price}$</p>
-            <button class="cart-button">Купить</button>
+            <button class="goods-item-button" id="${this.id_product}">Купить</button>
             </div>
             </div>`;
-            //<div><h3>${this.res}</h3></div>
             }
-    }
+}
 
 class Header {
   constructor() {
+
     this.$container = document.querySelector('header');
     this.$button = this.$container.querySelector('.cart-button');
     this.$search = this.$container.querySelector('#search');
@@ -69,43 +73,66 @@ class Header {
   }
 }
 
+class BodyContainer extends Header {
+  constructor(){
+    super();
+    this.$container = document.querySelector('.goods-list');
+    this.$buttons = this.$container.querySelectorAll('.goods-item-button');
+    this.$buttonsDelete = document.querySelectorAll('.cart-item__button');    
+  }
+  setButtonHandler(callback) {        
+    this.$buttons.forEach((item) => item.addEventListener('click', callback)); 
+  }
+  
+  setDeleteHandler(callback) {     
+    console.log(this.$buttonsDelete);   
+    this.$buttonsDelete.forEach((item) => item.addEventListener('click', callback)); 
+  }
+  
+  setQntButtonHandler(isClass,callback) {  
+    let $buttonQnt = document.querySelectorAll('.' + isClass);   
+    console.log($buttonQnt);   
+    $buttonQnt.forEach((item) => item.addEventListener('click', callback)); 
+  }
+}
+
 class GoodsList {
     constructor() {
       this.api = new Api();
-      this.header = new Header();
+      this.header = new Header();      
+      const arrCart = [];
+      this.cart = new CartList('cart-list', arrCart); 
       this.$goodsList = document.querySelector('.goods-list');
-      this.goods = [];
-      this.filteredGoods = [];
-      //this.api.fetch(this.onFetchError.bind(this), this.onFetchSuccess.bind(this));
+      this.goods = []; 
+      this.filteredGoods = [];  
 
+      //this.api.fetch(this.onFetchError.bind(this), this.onFetchSuccess.bind(this));
+      this.body = new BodyContainer();
       this.header.setSearchHandler((evt) => {
         this.search(evt.target.value);
-      })
+      })     
 
-    //fetchGoods() {
-    //  this.goods = this.api.fetch().map(({title, price}) => new GoodsItem(title, price));
-    //}
-
-    //onFetchError(err) {
       const fetch = this.api.fetchPromise();
 
       fetch.then((data) => { this.onFetchSuccess(data) })
         .catch((err) => { this.onFetchError(err) });
+
       console.log(fetch);
+
     }
-//
+
     search(str) {
       if(str === '') {
         this.filteredGoods = this.goods;
       }
       const regexp = new RegExp(str, 'gi');
-      this.filteredGoods = this.goods.filter((good) => regexp.test(good.title));
+      this.filteredGoods = this.goods.filter((good) => regexp.test(good.product_name));
       this.render();
     }
 
     onFetchSuccess(data) {
-      this.goods = data.map(({title, price}) => new GoodsItem(title, price));
-      this.filteredGoods = this.goods;
+      this.goods = data.map(({product_name, price, id_product}) => new GoodsItem(product_name, price, id_product));
+      this.filteredGoods = this.goods; 
       this.render();
     }
 
@@ -117,14 +144,142 @@ class GoodsList {
       this.$goodsList.textContent = '';
       this.filteredGoods.forEach((good) => {
           this.$goodsList.insertAdjacentHTML('beforeend', good.getHtml());
-      })
+      });
+      this.body = new BodyContainer;
+      this.body.setButtonHandler((evt) => {
+        this.cart.addToCart(evt);
+      });      
+      this.cart.arrCart = this.goods; 
     }
+}
 
-    getSum() {
-        let res = this.filteredGoods.reduce((sum, item) => sum += item.price, 0);
-        console.log('полная стоимость товаров в корзине: ' + res + '$');
-        //alert('полная стоимость товаров в корзине: ' + res + '$');
+class CartItem extends GoodsItem{ 
+  constructor (product_name, price, id_product, qnt) {
+    super(product_name, price, id_product);
+    this.qnt = qnt; // 
+  }
+
+    getHtml () { 
+      return `<div>
+              <div class="cart-item">
+              <img src="200x150.jpg" alt="some img">
+              <h3 class="cart-item__title">${this.product_name}</h3>
+              <p class="cart-item__price">Цена: ${this.price} $</p>
+              <button type="button" id="delete_id_${this.id_product}" name="delete" class="cart-item__qnt">    -    </button>
+              <span class="cart-item__quantity">Кол-во:${this.qnt}</span>
+              <button type="button" id="add_id_${this.id_product}" name="add" class="cart-item__qnt">+</button>
+              <div class="cart-item__delete"><button class="cart-item__button" id="${this.id_product}">Убрать из корзины</button></div>
+              </div>
+              </div>`;
+  }
+
+  addQuantity(a){ 
+    this.qnt = a; 
+  }; 
+}
+
+class CartList {
+  constructor(isClass, arrCart){
+    this.$container = document.querySelector(`.${isClass}`); 
+    this.arrCart = []; 
+    this.cartItems = []; 
+    this.body = null;
+  }
+
+  setButtonCardHand(callback) {
+    this.$search.addEventListener('input', callback);
+  }
+
+  addToCart(e) {
+    let id = e.target.id; 
+    let ind = this.arrCart.findIndex( obj => {
+      return obj.id_product == id 
+    });
+    let {product_name, price} = this.arrCart[ind];
+
+
+    ind = this.cartItems.findIndex( obj => { 
+      return obj.id_product == id
+    });
+    console.log(ind);
+
+    if (ind == -1) { 
+      this.cartItems.push(new CartItem(product_name, price, id, 1)); 
+      console.log(this.cartItems);      
+    } else {           
+      this.cartItems[ind].qnt = parseInt(this.cartItems[ind].qnt) + 1;
+      console.log(this.cartItems);
     } 
+    this.renderCart();
+  }
+
+  deleteFromCart(e){
+    let id = e.target.id;
+    let ind = this.cartItems.findIndex( obj => {
+        return obj.id_product == id
+    });
+    this.cartItems.splice(ind, 1);
+    console.log(this.cartItems)
+    this.renderCart(); 
+  }
+  
+  addQuantity(e){
+    let id = e.target.id.split('_', e.target.id)[1];
+    console.log(e.target.id);
+  }
+
+  changeQuantity(e){
+    let id = e.target.id.split('_')[2];
+    let ind = this.cartItems.findIndex( obj => {
+      return obj.id_product == id
+    });
+
+    let action = e.target.id.split('_')[0];
+    console.log(id); 
+    console.log(this.cartItems[ind].qnt);
+    switch(action) { 
+     
+      case 'delete':  
+        if (this.cartItems[ind].qnt >= 1) {
+          this.cartItems[ind].qnt = this.cartItems[ind].qnt - 1;
+        }
+        if((this.cartItems[ind].qnt) == 0){
+          this.cartItems.splice(ind, 1);
+        }
+        this.renderCart();
+        break;
+      
+        case 'add': 
+          this.cartItems[ind].qnt = this.cartItems[ind].qnt + 1; 
+          this.renderCart();
+          break;  
+    }    
+  }
+
+  renderCart() {            
+    this.$container.textContent = '';
+    this.cartItems.forEach(
+        item => this.$container.insertAdjacentHTML('beforeend', item.getHtml())                
+    );
+  
+    this.body = new BodyContainer;
+    this.body.setDeleteHandler((evt) => {
+          this.deleteFromCart(evt);
+        });      
+      
+    this.body.setQntButtonHandler('cart-item__qnt', (evt) => {
+      this.changeQuantity(evt);
+    });
+    
+    this.$container.insertAdjacentHTML('beforeend', `<div class="good-items__total-price">Итого  ${this.sumGoods()}$</div>`)
+    console.log(this.sumGoods());    
+  }
+
+  sumGoods() { 
+    let totalPrice = 0;
+    this.cartItems.forEach( ({price, qnt}) =>  { totalPrice += (parseInt(price)  * parseInt(qnt));} );
+    return totalPrice;             
+  } 
 }
 
 function openCart () {
@@ -132,41 +287,3 @@ function openCart () {
 }
 
 const goodsList = new GoodsList();
-
-goodsList.render();
-goodsList.getSum();
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//пустой класс корзина
-class Cart {
-    addGoods() {
-
-    }
-    removeGoods() {
-
-    }
-    changeGoods() {
-
-    }
-}
-
-class ElemCart {
-
-}
-
-/*
-МЕТОДЫ КОТОРЫЕ МОГУТ ПОНАДОБИТЬСЯ ПРИ РАБОТЕ С КОРЗИНОЙ
-1. updateData - обновляем данные из localStorage, записываем содержимое в переменную cartData
-2. getData - возвращаем данные
-3. saveData - сохраняем корзину в localStorage
-4. clearData - очищаем корзину
-5. getById - ищем элемент корзины по id товара
-6. add - добавляем товар в корзину
-7. remove - удаляем товар из корзины
-8. changeCount - меняем количество
-9. getCount - возвращаем число уникальных товаров корзины
-10. getCountAll - возвращаем число всех товаров корзины
-11. getSumma - возвращаем общую сумму заказа
-*/
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
