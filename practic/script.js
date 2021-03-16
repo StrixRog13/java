@@ -15,7 +15,8 @@ class Api {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           if(xhr.status === 200) {
-            success(JSON.parse(xhr.responseText));
+            success(JSON.parse(xhr//.responseText//
+              ));
           } else if(xhr.status > 400) {
             error('все пропало');
           }
