@@ -1,6 +1,6 @@
 body {
-    width: 1140px;
-    margin: 0 auto;
+     width: 1140px;
+     margin: 0 auto;
 }
 
 .container {
@@ -10,148 +10,162 @@ body {
 }
 
 .cart button {
-	     border-radius: 30px;
-       background-color: #A52A2A;
-       padding: 5px 20px 5px 20px;
-       border: 0px;
-       font-size: 12px;
-       color: black;
-       margin-top: 12px;
-       margin-bottom: 12px;
-       margin-left: 1020px; 
+	           border-radius: 30px;
+             background-color: #A52A2A;
+             padding: 5px 20px 5px 20px;
+             border: 0px;
+             font-size: 12px;
+             color: black;
+             margin-top: 12px;
+             margin-bottom: 12px;
+             margin-left: 1020px; 
 }
 
 .cart button:hover {
-                 background: white;
-                 color: red;
-                 box-shadow: inset 0 0 0 1px red;
+                   background: white;
+                   color: red;
+                   box-shadow: inset 0 0 0 1px red;
 }
 
 .cart {
-	  border:1px solid #A52A2A;
-	  min-height: 50px;
-    margin: 0 auto;
-}
+	    border:1px solid #A52A2A;
+	    min-height: 50px;
+      margin: 0 auto;
+}  
 
 .goods-list {
-	  width: 1140px;
-	  min-height: 500px;
-    display: flex;
-    justify-content: space-between;
-    border:1px solid #A52A2A;
+	          width: 1140px;
+	          min-height: 500px;
+            display: flex;
+            justify-content: space-between;
+            border:1px solid #A52A2A;
 }
 
 .cart-button {
-       border-radius: 30px;
-       background-color: #A52A2A;
-       padding: 5px 20px 5px 20px;
-       border: 0px;
-       font-size: 12px;
-       color: black;
-}
-.cart-button:hover{
-    			 background: white;
-           color: red;
-           box-shadow: inset 0 0 0 1px red;
-}
-
-.goods-item img, p, h3 {
-						display: flex;
-						justify-content: center;
-            margin: 15px;
-}
-
-.goods-item {
-			   min-height: 50px;
-     		 overflow: hidden;
-     		 min-height: 280px;
-     		 margin-bottom: 20px;
-     		 padding-bottom: 10px;
-     		 position: relative;
-     		 transition: 0.5s;
-}
-
-.goods-item .cart-button {
-						  margin-left: 75px;
-}	
-
-.goods-item:hover {
-             box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.15);
-}
-
-.goods-item-button {
              border-radius: 30px;
              background-color: #A52A2A;
              padding: 5px 20px 5px 20px;
              border: 0px;
              font-size: 12px;
              color: black;
-             margin-left: 71px;
+}
+.cart-button:hover{
+    			        background: white;
+                  color: red;
+                  box-shadow: inset 0 0 0 1px red;
+}
+
+.goods-item img, p, h3 {
+						           display: flex;
+						           justify-content: center;
+                       margin: 5px;
+}
+
+.goods-item {
+			      min-height: 50px;
+     		    overflow: hidden;
+     		    min-height: 280px;
+     		    margin-bottom: 20px;
+     		    padding-bottom: 10px;
+     		    position: relative;
+     		    transition: 0.5s;
+}
+
+.goods-item .cart-button {
+						             margin-left: 75px;
+}	
+
+.goods-item:hover {
+                  box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.15);
+}
+
+.goods-item-button {
+                   border-radius: 30px;
+                   background-color: #A52A2A;
+                   padding: 5px 20px 5px 20px;
+                   border: 0px;
+                   font-size: 12px;
+                   color: black;
+                   margin-left: 71px;
 }
 
 .goods-item-button:hover{
-           background: white;
-           color: red;
-           box-shadow: inset 0 0 0 1px red;
+                        background: white;
+                        color: red;
+                        box-shadow: inset 0 0 0 1px red;
 }
 
 .cart-item {
            border: 1px solid #A52A2A;
-           width: 220px;
+           min-width: 220px;
            padding: 10px;
+           display: flex;
+           flex-direction:column ;
+           justify-content:center;
 }
 
 .cart-item__delete {
-           margin: 20px 0 0 0;
+                   margin: 20px 0 0 0;
 }
 
 
 .good-items__total-price {
-          font-weight: 600;
-          font-size: 16px;
+                         font-weight: 600;
+                         font-size: 16px;
+                         display: flex;
+                         align-items:center;
 }
 
 .goods-item__title {
-          text-align: center;
+                   text-align: center;
 }
 
 .goods-item__price {
-          text-align: right;
-          font-weight: 700;
-          color: #cc0605;
+                   text-align: right;
+                   font-weight: 700;
+                   color: #cc0605;
 
 }
 .cart-item__delete button {
-        margin-left: auto;
-        display: block;
-        border-radius: 30px;
-        background-color: #A52A2A;
-        padding: 5px 20px 5px 20px;
-        border: 0px;
-        font-size: 12px;
-        color: black;
+                          margin-left: auto;
+                          display: block;
+                          border-radius: 30px;
+                          background-color: #A52A2A;
+                          padding: 5px 20px 5px 20px;
+                          border: 0px;
+                          font-size: 12px;
+                          color: black;
 }
 
 .cart-item__delete button:hover{
-           background: white;
-           color: red;
-           box-shadow: inset 0 0 0 1px red;
-}
+                               background: white;
+                               color: red;
+                               box-shadow: inset 0 0 0 1px red;
+}                    
 
 .cart-item button {
-        margin-left: auto;
-        display: block;
-        border-radius: 30px;
-        background-color: #A52A2A;
-        padding: 5px 20px 5px 20px;
-        border: 0px;
-        font-size: 12px;
-        color: black;
+                  margin-left: auto;
+                  display: block;
+                  border-radius: 30px;
+                  background-color: #A52A2A;
+                  padding: 5px 20px 5px 20px;
+                  border: 0px;
+                  font-size: 12px;
+                  color: black;
 }
 
 .cart-item button:hover{
-           background: white;
-           color: red;
-           box-shadow: inset 0 0 0 1px red;
+                       background: white;
+                       color: red;
+                       box-shadow: inset 0 0 0 1px red;
+}
+
+.cart-block {
+            width: 1140px;
+            display: flex;
+}
+
+.cart-block div {
+                display: flex;
 }
 

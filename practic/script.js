@@ -28,8 +28,6 @@ class Api {
       xhr.send();
     }
 
-  
-
     fetchPromise() {
       return new Promise((resolve, reject) => {
         this.fetch(reject, resolve)
@@ -44,7 +42,7 @@ class GoodsItem {
       this.id_product = id_product;
   }
 
-  getHtml () {
+    getHtml () {
       return `<div>
             <div class="goods-item">
             <img src="200x150.jpg" alt="some img">
@@ -57,42 +55,42 @@ class GoodsItem {
 }
 
 class Header {
-  constructor() {
+    constructor() {
 
-    this.$container = document.querySelector('header');
-    this.$button = this.$container.querySelector('.cart-button');
-    this.$search = this.$container.querySelector('#search');
+      this.$container = document.querySelector('header');
+      this.$button = this.$container.querySelector('.cart-button');
+      this.$search = this.$container.querySelector('#search');
   }
 
-  setSearchHandler(callback) {
-    this.$search.addEventListener('input', callback);
+    setSearchHandler(callback) {
+      this.$search.addEventListener('input', callback);
   }
 
-  setButtonHandler(callback) {
-    this.$button.addEventListener('click', callback);
+    setButtonHandler(callback) {
+      this.$button.addEventListener('click', callback);
   }
 }
 
 class BodyContainer extends Header {
-  constructor(){
-    super();
-    this.$container = document.querySelector('.goods-list');
-    this.$buttons = this.$container.querySelectorAll('.goods-item-button');
-    this.$buttonsDelete = document.querySelectorAll('.cart-item__button');    
+    constructor(){
+      super();
+      this.$container = document.querySelector('.goods-list');
+      this.$buttons = this.$container.querySelectorAll('.goods-item-button');
+      this.$buttonsDelete = document.querySelectorAll('.cart-item__button');    
   }
-  setButtonHandler(callback) {        
-    this.$buttons.forEach((item) => item.addEventListener('click', callback)); 
-  }
-  
-  setDeleteHandler(callback) {     
-    console.log(this.$buttonsDelete);   
-    this.$buttonsDelete.forEach((item) => item.addEventListener('click', callback)); 
+    setButtonHandler(callback) {        
+      this.$buttons.forEach((item) => item.addEventListener('click', callback)); 
   }
   
-  setQntButtonHandler(isClass,callback) {  
-    let $buttonQnt = document.querySelectorAll('.' + isClass);   
-    console.log($buttonQnt);   
-    $buttonQnt.forEach((item) => item.addEventListener('click', callback)); 
+    setDeleteHandler(callback) {     
+      console.log(this.$buttonsDelete);   
+      this.$buttonsDelete.forEach((item) => item.addEventListener('click', callback)); 
+  }
+  
+    setQntButtonHandler(isClass,callback) {  
+      let $buttonQnt = document.querySelectorAll('.' + isClass);   
+      console.log($buttonQnt);   
+      $buttonQnt.forEach((item) => item.addEventListener('click', callback)); 
   }
 }
 
@@ -105,8 +103,6 @@ class GoodsList {
       this.$goodsList = document.querySelector('.goods-list');
       this.goods = []; 
       this.filteredGoods = [];  
-
-      //this.api.fetch(this.onFetchError.bind(this), this.onFetchSuccess.bind(this));
       this.body = new BodyContainer();
       this.header.setSearchHandler((evt) => {
         this.search(evt.target.value);
@@ -116,9 +112,7 @@ class GoodsList {
 
       fetch.then((data) => { this.onFetchSuccess(data) })
         .catch((err) => { this.onFetchError(err) });
-
       console.log(fetch);
-
     }
 
     search(str) {
@@ -153,14 +147,14 @@ class GoodsList {
     }
 }
 
-class CartItem extends GoodsItem{ 
-  constructor (product_name, price, id_product, qnt) {
-    super(product_name, price, id_product);
-    this.qnt = qnt; // 
+class CartItem extends GoodsItem { 
+    constructor (product_name, price, id_product, qnt) {
+      super(product_name, price, id_product);
+      this.qnt = qnt; // 
   }
 
     getHtml () { 
-      return `<div>
+      return `
               <div class="cart-item">
               <img src="200x150.jpg" alt="some img">
               <h3 class="cart-item__title">${this.product_name}</h3>
@@ -169,116 +163,116 @@ class CartItem extends GoodsItem{
               <span class="cart-item__quantity">Кол-во:${this.qnt}</span>
               <button type="button" id="add_id_${this.id_product}" name="add" class="cart-item__qnt">+</button>
               <div class="cart-item__delete"><button class="cart-item__button" id="${this.id_product}">Убрать из корзины</button></div>
-              </div>
+              
               </div>`;
   }
 
-  addQuantity(a){ 
-    this.qnt = a; 
+    addQuantity(a){ 
+      this.qnt = a; 
   }; 
 }
 
 class CartList {
-  constructor(isClass, arrCart){
-    this.$container = document.querySelector(`.${isClass}`); 
-    this.arrCart = []; 
-    this.cartItems = []; 
-    this.body = null;
+    constructor(isClass, arrCart){
+      this.$container = document.querySelector(`.${isClass}`); 
+      this.arrCart = []; 
+      this.cartItems = []; 
+      this.body = null;
   }
 
-  setButtonCardHand(callback) {
-    this.$search.addEventListener('input', callback);
+    setButtonCardHand(callback) {
+      this.$search.addEventListener('input', callback);
   }
 
-  addToCart(e) {
-    let id = e.target.id; 
-    let ind = this.arrCart.findIndex( obj => {
-      return obj.id_product == id 
-    });
-    let {product_name, price} = this.arrCart[ind];
-
-
-    ind = this.cartItems.findIndex( obj => { 
-      return obj.id_product == id
-    });
-    console.log(ind);
-
-    if (ind == -1) { 
-      this.cartItems.push(new CartItem(product_name, price, id, 1)); 
-      console.log(this.cartItems);      
-    } else {           
-      this.cartItems[ind].qnt = parseInt(this.cartItems[ind].qnt) + 1;
-      console.log(this.cartItems);
-    } 
-    this.renderCart();
-  }
-
-  deleteFromCart(e){
-    let id = e.target.id;
-    let ind = this.cartItems.findIndex( obj => {
+    addToCart(e) {
+      let id = e.target.id; 
+      let ind = this.arrCart.findIndex( obj => {
+        return obj.id_product == id 
+      });
+      let {product_name, price} = this.arrCart[ind];
+  
+  
+      ind = this.cartItems.findIndex( obj => { 
         return obj.id_product == id
-    });
-    this.cartItems.splice(ind, 1);
-    console.log(this.cartItems)
-    this.renderCart(); 
+      });
+      console.log(ind);
+
+      if (ind == -1) { 
+        this.cartItems.push(new CartItem(product_name, price, id, 1)); 
+        console.log(this.cartItems);      
+      } else {           
+        this.cartItems[ind].qnt = parseInt(this.cartItems[ind].qnt) + 1;
+        console.log(this.cartItems);
+      } 
+      this.renderCart();
+  }
+
+    deleteFromCart(e){
+      let id = e.target.id;
+      let ind = this.cartItems.findIndex( obj => {
+          return obj.id_product == id
+      });
+      this.cartItems.splice(ind, 1);
+      console.log(this.cartItems)
+      this.renderCart(); 
   }
   
-  addQuantity(e){
-    let id = e.target.id.split('_', e.target.id)[1];
-    console.log(e.target.id);
+    addQuantity(e){
+      let id = e.target.id.split('_', e.target.id)[1];
+      console.log(e.target.id);
   }
 
-  changeQuantity(e){
-    let id = e.target.id.split('_')[2];
-    let ind = this.cartItems.findIndex( obj => {
-      return obj.id_product == id
-    });
-
-    let action = e.target.id.split('_')[0];
-    console.log(id); 
-    console.log(this.cartItems[ind].qnt);
-    switch(action) { 
+    changeQuantity(e){
+      let id = e.target.id.split('_')[2];
+      let ind = this.cartItems.findIndex( obj => {
+        return obj.id_product == id
+      });
+  
+      let action = e.target.id.split('_')[0];
+      console.log(id); 
+      console.log(this.cartItems[ind].qnt);
+      switch(action) { 
      
-      case 'delete':  
-        if (this.cartItems[ind].qnt >= 1) {
-          this.cartItems[ind].qnt = this.cartItems[ind].qnt - 1;
-        }
-        if((this.cartItems[ind].qnt) == 0){
-          this.cartItems.splice(ind, 1);
-        }
-        this.renderCart();
-        break;
-      
-        case 'add': 
-          this.cartItems[ind].qnt = this.cartItems[ind].qnt + 1; 
+        case 'delete':  
+          if (this.cartItems[ind].qnt >= 1) {
+            this.cartItems[ind].qnt = this.cartItems[ind].qnt - 1;
+          }
+          if((this.cartItems[ind].qnt) == 0){
+            this.cartItems.splice(ind, 1);
+          }
           this.renderCart();
-          break;  
+          break;
+        
+          case 'add': 
+            this.cartItems[ind].qnt = this.cartItems[ind].qnt + 1; 
+            this.renderCart();
+            break;  
     }    
   }
 
-  renderCart() {            
-    this.$container.textContent = '';
-    this.cartItems.forEach(
-        item => this.$container.insertAdjacentHTML('beforeend', item.getHtml())                
-    );
-  
-    this.body = new BodyContainer;
-    this.body.setDeleteHandler((evt) => {
-          this.deleteFromCart(evt);
-        });      
-      
-    this.body.setQntButtonHandler('cart-item__qnt', (evt) => {
-      this.changeQuantity(evt);
-    });
+    renderCart() {            
+      this.$container.textContent = '';
+      this.cartItems.forEach(
+          item => this.$container.insertAdjacentHTML('beforeend', item.getHtml())                
+      );
     
-    this.$container.insertAdjacentHTML('beforeend', `<div class="good-items__total-price">Итого  ${this.sumGoods()}$</div>`)
-    console.log(this.sumGoods());    
+      this.body = new BodyContainer;
+      this.body.setDeleteHandler((evt) => {
+            this.deleteFromCart(evt);
+          });      
+        
+      this.body.setQntButtonHandler('cart-item__qnt', (evt) => {
+        this.changeQuantity(evt);
+      });
+      
+      this.$container.insertAdjacentHTML('beforeend', `<div class="good-items__total-price">Итого  ${this.sumGoods()}$</div>`)
+      console.log(this.sumGoods());    
   }
 
-  sumGoods() { 
-    let totalPrice = 0;
-    this.cartItems.forEach( ({price, qnt}) =>  { totalPrice += (parseInt(price)  * parseInt(qnt));} );
-    return totalPrice;             
+    sumGoods() { 
+      let totalPrice = 0;
+      this.cartItems.forEach( ({price, qnt}) =>  { totalPrice += (parseInt(price)  * parseInt(qnt));} );
+      return totalPrice;             
   } 
 }
 
