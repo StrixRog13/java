@@ -38,6 +38,25 @@
       
     </section>
 
+    <section class="container">
+      <form class="form">
+        <h1>Обратная связь</h1>
+        <input type="text" class="name" required placeholder="Введите имя">
+        <div class="name__error">!!!Имя должно содержать только латинские или только русские буквы (без цифр и символов)</div>
+        <input type="tel" class="tel" required placeholder="Укажите номер телефона">
+        <div class="tel__error">!!!Пожалуйста, укажите номер телефона в формате: +7(8)0000000000</div>
+        <input type="text" class="email" required placeholder="Укажите свой e-mail">
+        <div class="email__error">!!!Неверный формат: e-mail может иметь вид **@**.ru или **@**.com</div>
+        <input type="textarea" class="textarea" placeholder="Оставьте комментарий">
+
+        <button type="submit" class="button">
+          <span class="button__text">Отправить</span>
+        </button>
+
+      </form>
+    </section>
+
+
   </main>
 
   <script src="script.js"></script>

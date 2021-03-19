@@ -281,3 +281,42 @@ function openCart () {
 }
 
 const goodsList = new GoodsList();
+
+const form = document.querySelector('form');
+const userName = document.querySelector('.name');
+const userNameError = document.querySelector('.name__error');
+const userTel = document.querySelector('.tel');
+const userTelError = document.querySelector('.tel__error');
+const userEmail = document.querySelector('.email');
+const userEmailError = document.querySelector('.email__error');
+
+const regexName = /^([a-z\s]+|[а-яё\s]+)$/i; //валидация имени
+const regexTel = /\+7|8\d{3}(\d){7}/; //валидация номера телефона
+const regexEmail = /^(\w+\.?-?\w*@\w+\.(ru|com))$/i; //валидация емейла
+
+form.addEventListener('submit', () => {
+  if(regexName.test(userName.value) && regexTel.test(userTel.value) && regexEmail.test(userEmail.value)) {
+    alert('Ваше обращение зарегистрированно');
+  }
+  if (!regexName.test(userName.value)) {
+    userName.style.border='1px solid #DA0101';
+    userNameError.style.display='block';
+  } else {
+    userName.style.border='1px solid green';
+    userNameError.style.display='none';
+  }
+  if (!regexTel.test(userTel.value)) {
+    userTel.style.border='1px solid #DA0101';
+    userTelError.style.display='block';
+  } else {
+    userTel.style.border='1px solid green';
+    userTelError.style.display='none';
+  }
+  if (!regexEmail.test(userEmail.value)) {
+    userEmail.style.border='1px solid #DA0101';
+    userEmailError.style.display='block';
+  } else {
+    userEmail.style.border='1px solid green';
+    userEmailError.style.display='none';
+  }
+});
