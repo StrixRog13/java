@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/5b30aa6394.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js" defer></script>
+
+    <title>eShop</title>
+</head>
+
+<body>
+
+<section id="app">
+  <header>
+
+  	<section class="container"> 
+
+  		<div class="cart">
+        <input id="search" v-model="searchLine" v-on:input="searchHandler" placeholder=" Поиск товаров ">
+    		<button class="cart-button" v-on:click="showCart" type="button">Корзина 
+          <span v-if="summCartItemsquant>0">{{summCartItemsquant}}</span></button>
+    	</div>
+
+    </section>
+
+  </header>
+
+  <main>
+
+      <div v-if="isVisibleCart" class="cart-block">
+        <div class="cart-list container">
+        <div class="cart-list__price">Сумма товаров: {{totalPrice}} $</div>
+        <div class="cart-item" v-for="item in cartItems">
+        <img src="200x150.jpg">
+        <h3 class="cart-item__title">{{item.product_name}}</h3>
+        <p class="cart-item__price">Цена: {{item.price}} $</p>
+          <button type="button"  name="delete" class="cart-item__qnt" v-bind:data-qntid="item.id_product" v-on:click="deleteQuantity">-</button>
+          <span class="cart-item__quantity">Количество: <b>{{item.qnt}}</b></span>
+          <button type="button"  name="add" class="cart-item__qnt" v-bind:data-qntid="item.id_product" v-on:click="addQuantity">+</button>
+                  <div class="cart-item__delete">
+                    <button class="cart-item__button" v-bind:data-id="item.id_product" v-on:click="deleteFromCartHandler">Удалить из корзины</button>
+                  </div>
+        </div> 
+      </div>
+    </div>
+
+  	<section class="main container">
+    	
+      <div class="goods-list">
+          <h3 class="goods-null" v-if="filteredGoods.length == 0">Поиск не дал результатов</h3>
+        <div class="goods-item" v-for="good in filteredGoods">
+          <img src="200x150.jpg">
+          <h3 class="goods-item__title">{{ good.product_name }}
+          </h3><p class="goods-item__price">Цена:{{ good.price }} $</p>
+          <button class="goods-item-button" v-on:click="addToCartHandler" v-bind:id="good.id_product">Добавить</button>
+
+      </div>
+      
+    </section>
+
+  </main>
+
+  </section>
+
+  <script src="script.js" defer></script>
+
+      <section class="container">
+      <form class="form">
+        <h1>Обратная связь</h1>
+        <input type="text" class="name" required placeholder="Введите имя">
+        <div class="name__error">!!!Имя должно содержать только латинские или только русские буквы (без цифр и символов)</div>
+        <input type="tel" class="tel" required placeholder="Укажите номер телефона">
+        <div class="tel__error">!!!Пожалуйста, укажите номер телефона в формате: +7(8)0000000000</div>
+        <input type="text" class="email" required placeholder="Укажите свой e-mail">
+        <div class="email__error">!!!Неверный формат: e-mail может иметь вид **@**.ru или **@**.com</div>
+        <input type="textarea" class="textarea" placeholder="Оставьте комментарий">
+
+        <button type="submit" class="button">
+          <span class="button__text">Отправить</span>
+        </button>
+
+      </form>
+    </section>
+
+</body>
+
+</html>
