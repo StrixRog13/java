@@ -248,9 +248,3 @@ const vue = new Vue({
 //    userEmailError.style.display='none';
 //  }
 //});
-
-
-
-const a = 5;
-const b = prompt("dsa");
-console.log(a==b);
